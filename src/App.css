@@ -1,0 +1,9 @@
+.App {
+  overflow-y: overlay;
+}
+.body {
+  position: absolute;
+  width: 100%;
+  top: 6vh;
+  left: 0;
+}
