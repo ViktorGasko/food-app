@@ -1,10 +1,12 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
 import Modal from "../UI/Modal";
 import CartItem from "./CartItem";
 import classes from "./Cart.module.css";
-import CartContext, { Item } from "../../store/cart-context";
+import { Item } from "../../store/index";
 import CheckOut from "./Checkout";
+import { cartActions } from "../../store/cart-slice";
 
 interface CartProps {
   onClose: Function;
@@ -14,17 +16,18 @@ const Cart = (props: CartProps) => {
   const [checkOut, setCheckout] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [didSubmit, setDidSubmit] = useState(false);
-  const cartCtx = useContext(CartContext);
+  const cartCtx = useSelector((state: any) => state.cart);
+  const dispatch = useDispatch();
 
   const totalAmount = `$${cartCtx.totalAmount.toFixed(2)}`;
   const hasItems = cartCtx.items.length > 0;
 
   const cartItemRemoveHandler = (id: string) => {
-    cartCtx.removeItem(id);
+    dispatch(cartActions.removeItem(id));
   };
 
   const cartItemAddHandler = (item: Item) => {
-    cartCtx.addItem(item);
+    dispatch(cartActions.addItem(item));
   };
 
   const orderHandler = () => {
@@ -49,7 +52,7 @@ const Cart = (props: CartProps) => {
     ).then(() => {
       setIsSubmitting(false);
       setDidSubmit(true);
-      cartCtx.clearCart();
+      dispatch(cartActions.clearCart());
     });
   };
 
